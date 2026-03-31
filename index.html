@@ -10,401 +10,79 @@
 <title>Laporan Harian Peternakan</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+  :root{--green-dark:#1a4f2e;--green-mid:#2d7a4a;--green-light:#e8f5ed;--green-border:#b8dfc6;--amber:#f59e0b;--amber-light:#fef3c7;--red:#dc2626;--red-light:#fee2e2;--text:#1a1f1c;--text-mid:#4b5e54;--text-soft:#8fa99a;--bg:#f5f7f5;--white:#ffffff;--border:#d4e4d8;--radius:12px;--radius-sm:8px;}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.5;padding-bottom:32px;}
+  .app-header{background:var(--green-dark);color:white;padding:16px 20px 14px;position:sticky;top:0;z-index:10;}
+  .app-header h1{font-size:17px;font-weight:600;letter-spacing:-.01em;}
+  .app-header .sub{font-size:12px;opacity:.7;margin-top:2px;}
+  .date-badge{display:inline-block;background:rgba(255,255,255,.15);border-radius:20px;padding:3px 10px;font-size:12px;margin-top:6px;}
+  .container{padding:12px 16px;}
+  .card{background:var(--white);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;}
+  .card-header{background:var(--green-dark);padding:11px 16px;display:flex;align-items:center;gap:8px;}
+  .card-header .icon{width:28px;height:28px;background:rgba(255,255,255,.15);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+  .card-header h2{font-size:14px;font-weight:600;color:white;}
+  .card-body{padding:14px 16px;}
+  .field{margin-bottom:12px;}.field:last-child{margin-bottom:0;}
+  label.lbl{display:block;font-size:12px;font-weight:500;color:var(--text-mid);margin-bottom:5px;}
+  .req{color:var(--red);}
+  input[type=text],input[type=date],input[type=number],select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);background:var(--white);appearance:none;-webkit-appearance:none;outline:none;transition:border-color .15s;}
+  input:focus,select:focus,textarea:focus{border-color:var(--green-mid);}
+  textarea{resize:none;line-height:1.5;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238fa99a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .kdg-block{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;background:var(--bg);}
+  .kdg-block:last-child{margin-bottom:0;}
+  .kdg-title-row{margin-bottom:10px;}
+  .kdg-name-input{font-size:13px!important;font-weight:600!important;color:var(--green-dark)!important;background:transparent!important;border:none!important;border-bottom:1.5px dashed var(--green-border)!important;border-radius:0!important;padding:2px 4px!important;width:auto!important;min-width:80px;max-width:160px;}
+  .kdg-name-input:focus{border-bottom-color:var(--green-mid)!important;outline:none!important;}
+  .toggle-card{border:1.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;}
+  .toggle-header{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;background:var(--bg);}
+  .toggle-header label{font-size:14px;font-weight:500;cursor:pointer;flex:1;}
+  .toggle-switch{width:44px;height:26px;background:#d1d5db;border-radius:13px;position:relative;transition:background .2s;flex-shrink:0;}
+  .toggle-switch.on{background:var(--green-mid);}
+  .toggle-switch::after{content:'';position:absolute;width:20px;height:20px;background:white;border-radius:50%;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+  .toggle-switch.on::after{transform:translateX(18px);}
+  .toggle-body{padding:12px 14px;border-top:1px solid var(--border);background:var(--white);display:none;}
+  .toggle-body.open{display:block;}
+  .dyn-list{margin-bottom:8px;}
+  .dyn-row{display:grid;gap:8px;margin-bottom:8px;align-items:end;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px;}
+  .dyn-row.beli-row,.dyn-row.mort-row,.dyn-row.jual-row,.dyn-row.afkir-row,.dyn-row.ops-row{grid-template-columns:1fr 1fr;}
+  .dyn-row.pakan-row{grid-template-columns:1fr 1fr 1fr 32px;}
+  .dyn-row.kes-row{grid-template-columns:1fr 1fr;}
+  .dyn-row .field{margin-bottom:0;}
+  .del-btn{grid-column:span 2;background:none;border:1px solid #f09595;border-radius:var(--radius-sm);color:var(--red);font-size:13px;padding:7px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .dyn-row.kes-row .del-btn{grid-column:span 2;}
+  .dyn-row.pakan-row .del-btn{grid-column:span 1;align-self:flex-end;}
+  .add-btn{width:100%;padding:11px;border:1.5px dashed var(--border);border-radius:var(--radius-sm);background:none;color:var(--text-mid);font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:4px;}
+  .add-btn:active{background:var(--green-light);}
 
-  :root {
-    --green-dark: #1a4f2e;
-    --green-mid: #2d7a4a;
-    --green-light: #e8f5ed;
-    --green-border: #b8dfc6;
-    --amber: #f59e0b;
-    --amber-light: #fef3c7;
-    --red: #dc2626;
-    --red-light: #fee2e2;
-    --text: #1a1f1c;
-    --text-mid: #4b5e54;
-    --text-soft: #8fa99a;
-    --bg: #f5f7f5;
-    --white: #ffffff;
-    --border: #d4e4d8;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
+  /* DOC badge styling */
+  .doc-badge{display:inline-block;background:#7c3aed;color:white;font-size:9px;font-weight:600;padding:1px 6px;border-radius:20px;margin-left:4px;vertical-align:middle;}
+  select option[value="DOC (KDG-05)"]{background:#f5f3ff;color:#5b21b6;font-weight:600;}
+  select option.opt-doc{background:#f5f3ff;color:#5b21b6;}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    font-size: 15px;
-    line-height: 1.5;
-    padding-bottom: 32px;
-  }
-
-  /* ── HEADER ── */
-  .app-header {
-    background: var(--green-dark);
-    color: white;
-    padding: 16px 20px 14px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-  }
-  .app-header h1 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; }
-  .app-header .sub { font-size: 12px; opacity: .7; margin-top: 2px; }
-  .date-badge {
-    display: inline-block;
-    background: rgba(255,255,255,.15);
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 12px;
-    margin-top: 6px;
-  }
-
-  /* ── SECTIONS ── */
-  .container { padding: 12px 16px; }
-
-  .card {
-    background: var(--white);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    margin-bottom: 12px;
-    overflow: hidden;
-  }
-  .card-header {
-    background: var(--green-dark);
-    padding: 11px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-header .icon {
-    width: 28px; height: 28px;
-    background: rgba(255,255,255,.15);
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
-  }
-  .card-header h2 { font-size: 14px; font-weight: 600; color: white; }
-  .card-body { padding: 14px 16px; }
-
-  /* ── FIELDS ── */
-  .field { margin-bottom: 12px; }
-  .field:last-child { margin-bottom: 0; }
-  label.lbl { display: block; font-size: 12px; font-weight: 500; color: var(--text-mid); margin-bottom: 5px; }
-  .req { color: var(--red); }
-
-  input[type=text], input[type=date], input[type=number], select, textarea {
-    width: 100%;
-    padding: 11px 13px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    color: var(--text);
-    background: var(--white);
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    transition: border-color .15s;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--green-mid); }
-  textarea { resize: none; line-height: 1.5; }
-  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238fa99a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 34px; }
-
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-  /* ── KANDANG BLOCK ── */
-  .kdg-block {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px;
-    margin-bottom: 10px;
-    background: var(--bg);
-  }
-  .kdg-block:last-child { margin-bottom: 0; }
-  .kdg-title {
-    font-size: 13px; font-weight: 600; color: var(--green-dark);
-    display: flex; align-items: center; gap: 6px; margin-bottom: 10px;
-  }
-  .kdg-title-row {
-    margin-bottom: 10px;
-  }
-  .kdg-name-input {
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: var(--green-dark) !important;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 1.5px dashed var(--green-border) !important;
-    border-radius: 0 !important;
-    padding: 2px 4px !important;
-    width: auto !important;
-    min-width: 80px;
-    max-width: 160px;
-  }
-  .kdg-name-input:focus {
-    border-bottom-color: var(--green-mid) !important;
-    outline: none !important;
-  }
-  .pill {
-    font-size: 11px; font-weight: 500; padding: 2px 8px;
-    border-radius: 20px; background: var(--green-light); color: var(--green-dark);
-  }
-  .pill.amber { background: var(--amber-light); color: #92400e; }
-
-  /* ── TOGGLE SECTION ── */
-  .toggle-card {
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .toggle-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 13px 14px;
-    cursor: pointer;
-    background: var(--bg);
-  }
-  .toggle-header label { font-size: 14px; font-weight: 500; cursor: pointer; flex: 1; }
-  .toggle-switch {
-    width: 44px; height: 26px;
-    background: #d1d5db;
-    border-radius: 13px;
-    position: relative;
-    transition: background .2s;
-    flex-shrink: 0;
-  }
-  .toggle-switch.on { background: var(--green-mid); }
-  .toggle-switch::after {
-    content: '';
-    position: absolute;
-    width: 20px; height: 20px;
-    background: white;
-    border-radius: 50%;
-    top: 3px; left: 3px;
-    transition: transform .2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,.2);
-  }
-  .toggle-switch.on::after { transform: translateX(18px); }
-  .toggle-body { padding: 12px 14px; border-top: 1px solid var(--border); background: var(--white); display: none; }
-  .toggle-body.open { display: block; }
-
-  /* ── DYNAMIC ROWS ── */
-  .dyn-list { margin-bottom: 8px; }
-  .dyn-row {
-    display: grid;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: end;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 10px;
-  }
-  .dyn-row.beli-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row.mort-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row.jual-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row.afkir-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row.ops-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row.pakan-row { grid-template-columns: 1fr 1fr 1fr 32px; }
-  .dyn-row.kes-row { grid-template-columns: 1fr 1fr; }
-  .dyn-row .field { margin-bottom: 0; }
-  .del-btn {
-    grid-column: span 2;
-    background: none;
-    border: 1px solid #f09595;
-    border-radius: var(--radius-sm);
-    color: var(--red);
-    font-size: 13px;
-    padding: 7px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-  }
-  .dyn-row.kes-row .del-btn { grid-column: span 2; }
-  .dyn-row.pakan-row .del-btn { grid-column: span 1; align-self: flex-end; }
-
-  .add-btn {
-    width: 100%;
-    padding: 11px;
-    border: 1.5px dashed var(--border);
-    border-radius: var(--radius-sm);
-    background: none;
-    color: var(--text-mid);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    margin-top: 4px;
-  }
-  .add-btn:active { background: var(--green-light); }
-
-  /* ── CHECKLIST ── */
-  .check-item {
-    display: flex; align-items: center; gap: 12px;
-    padding: 11px 0;
-    border-bottom: 1px solid var(--bg);
-    cursor: pointer;
-  }
-  .check-item:last-child { border-bottom: none; }
-  .check-box {
-    width: 22px; height: 22px; flex-shrink: 0;
-    border: 2px solid var(--border);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all .15s;
-  }
-  .check-box.checked { background: var(--green-mid); border-color: var(--green-mid); }
-  .check-box.checked::after { content: '✓'; color: white; font-size: 13px; font-weight: 600; }
-  .check-item span { font-size: 14px; }
-
-  /* ── BUTTONS ── */
-  .btn-generate {
-    width: 100%;
-    padding: 15px;
-    background: var(--green-dark);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 16px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    margin-bottom: 10px;
-    letter-spacing: -.01em;
-  }
-  .btn-generate:active { opacity: .85; }
-  .btn-reset {
-    width: 100%;
-    padding: 12px;
-    background: none;
-    color: var(--text-mid);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 14px;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-  }
-
-  /* ── PREVIEW ── */
-  .preview-card { display: none; margin-top: 4px; }
-  .preview-card.show { display: block; }
-  .preview-inner {
-    background: #0f2718;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 10px;
-  }
-  .preview-label { font-size: 11px; color: #6fcf97; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px; }
-  .preview-text {
-    font-family: 'DM Mono', monospace;
-    font-size: 12.5px;
-    color: #d4ffd4;
-    white-space: pre-wrap;
-    line-height: 1.8;
-  }
-  .btn-copy {
-    width: 100%;
-    padding: 13px;
-    background: var(--green-mid);
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    margin-bottom: 8px;
-  }
-  .btn-wa {
-    width: 100%;
-    padding: 13px;
-    background: #25d366;
-    color: white;
-    border: none;
-    border-radius: var(--radius);
-    font-size: 15px;
-    font-weight: 600;
-    font-family: 'DM Sans', sans-serif;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-  }
-  .copy-toast {
-    display: none;
-    background: var(--green-dark);
-    color: white;
-    text-align: center;
-    padding: 10px;
-    border-radius: var(--radius-sm);
-    font-size: 13px;
-    margin-top: 8px;
-  }
-  .copy-toast.show { display: block; }
-
-  .divider { height: 1px; background: var(--border); margin: 12px 0; }
-  .hint { font-size: 12px; color: var(--text-soft); margin-top: 4px; }
-
-  /* number input fix mobile */
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-
-  /* Rak input — utama, besar */
-  .rak-primary input[type=number] {
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    color: var(--green-dark) !important;
-    text-align: center !important;
-    padding: 14px 10px !important;
-    border: 2.5px solid var(--green-mid) !important;
-    background: var(--green-light) !important;
-  }
-  .rak-primary input[type=number]:focus {
-    border-color: var(--green-dark) !important;
-    background: #fff !important;
-  }
-  .rak-primary .lbl {
-    font-size: 13px !important;
-    font-weight: 700 !important;
-    color: var(--green-dark) !important;
-    text-align: center;
-    display: block;
-  }
-  .rak-badge {
-    display: inline-block;
-    background: var(--green-mid);
-    color: white;
-    font-size: 10px;
-    font-weight: 600;
-    padding: 1px 7px;
-    border-radius: 20px;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
-  .kdg-secondary {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .lbl-secondary {
-    font-size: 11px !important;
-    color: var(--text-soft) !important;
-    font-weight: 500 !important;
-  }
-  input.secondary-input {
-    font-size: 13px !important;
-    padding: 9px 10px !important;
-    color: var(--text-mid) !important;
-    border-color: var(--border) !important;
-    background: var(--bg) !important;
-  }
-  .rak-calc-hint {
-    font-size: 11px;
-    color: var(--text-soft);
-    text-align: center;
-    margin-top: 4px;
-    font-style: italic;
-  }
+  .rak-primary input[type=number]{font-size:22px!important;font-weight:700!important;color:var(--green-dark)!important;text-align:center!important;padding:14px 10px!important;border:2.5px solid var(--green-mid)!important;background:var(--green-light)!important;}
+  .rak-primary .lbl{font-size:13px!important;font-weight:700!important;color:var(--green-dark)!important;text-align:center;display:block;}
+  .rak-badge{display:inline-block;background:var(--green-mid);color:white;font-size:10px;font-weight:600;padding:1px 7px;border-radius:20px;margin-left:4px;vertical-align:middle;}
+  .kdg-secondary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;}
+  .lbl-secondary{font-size:11px!important;color:var(--text-soft)!important;font-weight:500!important;}
+  input.secondary-input{font-size:13px!important;padding:9px 10px!important;color:var(--text-mid)!important;border-color:var(--border)!important;background:var(--bg)!important;}
+  .rak-calc-hint{font-size:11px;color:var(--text-soft);text-align:center;margin-top:4px;font-style:italic;}
+  .btn-generate{width:100%;padding:15px;background:var(--green-dark);color:white;border:none;border-radius:var(--radius);font-size:16px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:10px;letter-spacing:-.01em;}
+  .btn-generate:active{opacity:.85;}
+  .btn-reset{width:100%;padding:12px;background:none;color:var(--text-mid);border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:'DM Sans',sans-serif;cursor:pointer;}
+  .preview-card{display:none;margin-top:4px;}.preview-card.show{display:block;}
+  .preview-inner{background:#0f2718;border-radius:var(--radius);padding:16px;margin-bottom:10px;}
+  .preview-label{font-size:11px;color:#6fcf97;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px;}
+  .preview-text{font-family:'DM Mono',monospace;font-size:12.5px;color:#d4ffd4;white-space:pre-wrap;line-height:1.8;}
+  .btn-copy{width:100%;padding:13px;background:var(--green-mid);color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;margin-bottom:8px;}
+  .btn-wa{width:100%;padding:13px;background:#25d366;color:white;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+  .copy-toast{display:none;background:var(--green-dark);color:white;text-align:center;padding:10px;border-radius:var(--radius-sm);font-size:13px;margin-top:8px;}
+  .copy-toast.show{display:block;}
+  .divider{height:1px;background:var(--border);margin:12px 0;}
+  .hint{font-size:12px;color:var(--text-soft);margin-top:4px;}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;}
 </style>
 </head>
 <body>
@@ -417,146 +95,58 @@
 
 <div class="container">
 
-  <!-- INFO DASAR -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">📋</div>
-      <h2>Informasi dasar</h2>
-    </div>
+    <div class="card-header"><div class="icon">📋</div><h2>Informasi dasar</h2></div>
     <div class="card-body">
       <div class="grid2">
-        <div class="field">
-          <label class="lbl">Tanggal <span class="req">*</span></label>
-          <input type="date" id="f-tgl">
-        </div>
-        <div class="field">
-          <label class="lbl">Nama pelapor <span class="req">*</span></label>
-          <input type="text" id="f-nama" placeholder="Nama Anda">
-        </div>
+        <div class="field"><label class="lbl">Tanggal <span class="req">*</span></label><input type="date" id="f-tgl"></div>
+        <div class="field"><label class="lbl">Nama pelapor <span class="req">*</span></label><input type="text" id="f-nama" placeholder="Nama Anda"></div>
       </div>
     </div>
   </div>
 
-  <!-- PRODUKSI TELUR -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">🥚</div>
-      <h2>Produksi telur harian</h2>
-    </div>
+    <div class="card-header"><div class="icon">🥚</div><h2>Produksi telur harian</h2></div>
     <div class="card-body">
       <div class="kdg-block">
-        <div class="kdg-title-row">
-          <input type="text" class="kdg-name-input" id="k1-nama" value="KDG-01" placeholder="Nama kandang">
-        </div>
-        <div class="field rak-primary">
-          <label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label>
-          <input type="number" id="k1-rak" placeholder="0" step="0.5" inputmode="decimal">
-          <div class="rak-calc-hint" id="k1-hint">— butir</div>
-        </div>
-        <div class="kdg-secondary">
-          <div class="field">
-            <label class="lbl lbl-secondary">Butir dipanen (opsional)</label>
-            <input type="number" class="secondary-input" id="k1-panen" placeholder="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label class="lbl lbl-secondary">BS / retak</label>
-            <input type="number" class="secondary-input" id="k1-bs" placeholder="0" inputmode="numeric">
-          </div>
-        </div>
+        <div class="kdg-title-row"><input type="text" class="kdg-name-input" id="k1-nama" value="KDG-01" placeholder="Nama kandang"></div>
+        <div class="field rak-primary"><label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label><input type="number" id="k1-rak" placeholder="0" step="0.5" inputmode="decimal"><div class="rak-calc-hint" id="k1-hint">— butir</div></div>
+        <div class="kdg-secondary"><div class="field"><label class="lbl lbl-secondary">Butir dipanen (opsional)</label><input type="number" class="secondary-input" id="k1-panen" placeholder="0" inputmode="numeric"></div><div class="field"><label class="lbl lbl-secondary">BS / retak</label><input type="number" class="secondary-input" id="k1-bs" placeholder="0" inputmode="numeric"></div></div>
       </div>
       <div class="kdg-block">
-        <div class="kdg-title-row">
-          <input type="text" class="kdg-name-input" id="k2-nama" value="KDG-02" placeholder="Nama kandang">
-        </div>
-        <div class="field rak-primary">
-          <label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label>
-          <input type="number" id="k2-rak" placeholder="0" step="0.5" inputmode="decimal">
-          <div class="rak-calc-hint" id="k2-hint">— butir</div>
-        </div>
-        <div class="kdg-secondary">
-          <div class="field">
-            <label class="lbl lbl-secondary">Butir dipanen (opsional)</label>
-            <input type="number" class="secondary-input" id="k2-panen" placeholder="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label class="lbl lbl-secondary">BS / retak</label>
-            <input type="number" class="secondary-input" id="k2-bs" placeholder="0" inputmode="numeric">
-          </div>
-        </div>
+        <div class="kdg-title-row"><input type="text" class="kdg-name-input" id="k2-nama" value="KDG-02" placeholder="Nama kandang"></div>
+        <div class="field rak-primary"><label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label><input type="number" id="k2-rak" placeholder="0" step="0.5" inputmode="decimal"><div class="rak-calc-hint" id="k2-hint">— butir</div></div>
+        <div class="kdg-secondary"><div class="field"><label class="lbl lbl-secondary">Butir dipanen (opsional)</label><input type="number" class="secondary-input" id="k2-panen" placeholder="0" inputmode="numeric"></div><div class="field"><label class="lbl lbl-secondary">BS / retak</label><input type="number" class="secondary-input" id="k2-bs" placeholder="0" inputmode="numeric"></div></div>
       </div>
       <div class="kdg-block">
-        <div class="kdg-title-row">
-          <input type="text" class="kdg-name-input" id="k3-nama" value="KDG-03" placeholder="Nama kandang">
-        </div>
-        <div class="field rak-primary">
-          <label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label>
-          <input type="number" id="k3-rak" placeholder="0" step="0.5" inputmode="decimal">
-          <div class="rak-calc-hint" id="k3-hint">— butir</div>
-        </div>
-        <div class="kdg-secondary">
-          <div class="field">
-            <label class="lbl lbl-secondary">Butir dipanen (opsional)</label>
-            <input type="number" class="secondary-input" id="k3-panen" placeholder="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label class="lbl lbl-secondary">BS / retak</label>
-            <input type="number" class="secondary-input" id="k3-bs" placeholder="0" inputmode="numeric">
-          </div>
-        </div>
+        <div class="kdg-title-row"><input type="text" class="kdg-name-input" id="k3-nama" value="KDG-03" placeholder="Nama kandang"></div>
+        <div class="field rak-primary"><label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label><input type="number" id="k3-rak" placeholder="0" step="0.5" inputmode="decimal"><div class="rak-calc-hint" id="k3-hint">— butir</div></div>
+        <div class="kdg-secondary"><div class="field"><label class="lbl lbl-secondary">Butir dipanen (opsional)</label><input type="number" class="secondary-input" id="k3-panen" placeholder="0" inputmode="numeric"></div><div class="field"><label class="lbl lbl-secondary">BS / retak</label><input type="number" class="secondary-input" id="k3-bs" placeholder="0" inputmode="numeric"></div></div>
       </div>
       <div class="kdg-block">
-        <div class="kdg-title-row">
-          <input type="text" class="kdg-name-input" id="k4-nama" value="KDG-04" placeholder="Nama kandang">
-        </div>
-        <div class="field rak-primary">
-          <label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label>
-          <input type="number" id="k4-rak" placeholder="0" step="0.5" inputmode="decimal">
-          <div class="rak-calc-hint" id="k4-hint">— butir</div>
-        </div>
-        <div class="kdg-secondary">
-          <div class="field">
-            <label class="lbl lbl-secondary">Butir dipanen (opsional)</label>
-            <input type="number" class="secondary-input" id="k4-panen" placeholder="0" inputmode="numeric">
-          </div>
-          <div class="field">
-            <label class="lbl lbl-secondary">BS / retak</label>
-            <input type="number" class="secondary-input" id="k4-bs" placeholder="0" inputmode="numeric">
-          </div>
-        </div>
+        <div class="kdg-title-row"><input type="text" class="kdg-name-input" id="k4-nama" value="KDG-04" placeholder="Nama kandang"></div>
+        <div class="field rak-primary"><label class="lbl">Rak dipanen <span class="rak-badge">1 rak = 30 butir</span></label><input type="number" id="k4-rak" placeholder="0" step="0.5" inputmode="decimal"><div class="rak-calc-hint" id="k4-hint">— butir</div></div>
+        <div class="kdg-secondary"><div class="field"><label class="lbl lbl-secondary">Butir dipanen (opsional)</label><input type="number" class="secondary-input" id="k4-panen" placeholder="0" inputmode="numeric"></div><div class="field"><label class="lbl lbl-secondary">BS / retak</label><input type="number" class="secondary-input" id="k4-bs" placeholder="0" inputmode="numeric"></div></div>
       </div>
     </div>
   </div>
 
-  <!-- PAKAN -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">🌾</div>
-      <h2>Pakan</h2>
-    </div>
+    <div class="card-header"><div class="icon">🌾</div><h2>Pakan</h2></div>
     <div class="card-body">
       <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px">Pemakaian pakan hari ini — pilih kandang &amp; jenis pakan, bisa tambah baris</p>
       <div id="pakan-kdg-list"></div>
       <button class="add-btn" onclick="addPakanRow()" style="margin-bottom:12px">+ Tambah baris pemakaian</button>
       <div class="divider"></div>
       <div class="toggle-card">
-        <div class="toggle-header" onclick="toggle('beli')">
-          <label>Ada pembelian pakan hari ini?</label>
-          <div class="toggle-switch" id="sw-beli"></div>
-        </div>
-        <div class="toggle-body" id="beli-body">
-          <div class="dyn-list" id="beli-list"></div>
-          <button class="add-btn" onclick="addRow('beli')">+ Tambah baris pembelian</button>
-        </div>
+        <div class="toggle-header" onclick="toggle('beli')"><label>Ada pembelian pakan hari ini?</label><div class="toggle-switch" id="sw-beli"></div></div>
+        <div class="toggle-body" id="beli-body"><div class="dyn-list" id="beli-list"></div><button class="add-btn" onclick="addRow('beli')">+ Tambah baris pembelian</button></div>
       </div>
     </div>
   </div>
 
-  <!-- KEMATIAN & AFKIR -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">💀</div>
-      <h2>Kematian & afkir</h2>
-    </div>
+    <div class="card-header"><div class="icon">💀</div><h2>Kematian &amp; afkir</h2></div>
     <div class="card-body">
       <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px">Kosongkan jika tidak ada kejadian hari ini.</p>
       <div class="dyn-list" id="mort-list"></div>
@@ -564,122 +154,60 @@
     </div>
   </div>
 
-  <!-- PENJUALAN -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">💰</div>
-      <h2>Penjualan hari ini</h2>
-    </div>
+    <div class="card-header"><div class="icon">💰</div><h2>Penjualan hari ini</h2></div>
     <div class="card-body">
       <div class="toggle-card">
-        <div class="toggle-header" onclick="toggle('jual')">
-          <label>Ada penjualan telur?</label>
-          <div class="toggle-switch" id="sw-jual"></div>
-        </div>
-        <div class="toggle-body" id="jual-body">
-          <div class="dyn-list" id="jual-list"></div>
-          <button class="add-btn" onclick="addRow('jual')">+ Tambah pembeli</button>
-        </div>
+        <div class="toggle-header" onclick="toggle('jual')"><label>Ada penjualan telur?</label><div class="toggle-switch" id="sw-jual"></div></div>
+        <div class="toggle-body" id="jual-body"><div class="dyn-list" id="jual-list"></div><button class="add-btn" onclick="addRow('jual')">+ Tambah pembeli</button></div>
       </div>
       <div class="toggle-card">
-        <div class="toggle-header" onclick="toggle('afkir')">
-          <label>Ada penjualan ayam afkir?</label>
-          <div class="toggle-switch" id="sw-afkir"></div>
-        </div>
-        <div class="toggle-body" id="afkir-body">
-          <div class="dyn-list" id="afkir-list"></div>
-          <button class="add-btn" onclick="addRow('afkir')">+ Tambah pembeli afkir</button>
-        </div>
+        <div class="toggle-header" onclick="toggle('afkir')"><label>Ada penjualan ayam afkir?</label><div class="toggle-switch" id="sw-afkir"></div></div>
+        <div class="toggle-body" id="afkir-body"><div class="dyn-list" id="afkir-list"></div><button class="add-btn" onclick="addRow('afkir')">+ Tambah pembeli afkir</button></div>
       </div>
       <div class="toggle-card">
-        <div class="toggle-header" onclick="toggle('tinja')">
-          <label>Ada penjualan kotoran/tinja ayam?</label>
-          <div class="toggle-switch" id="sw-tinja"></div>
-        </div>
-        <div class="toggle-body" id="tinja-body">
-          <div class="dyn-list" id="tinja-list"></div>
-          <button class="add-btn" onclick="addRow('tinja')">+ Tambah pembeli kotoran</button>
-        </div>
+        <div class="toggle-header" onclick="toggle('tinja')"><label>Ada penjualan kotoran/tinja ayam?</label><div class="toggle-switch" id="sw-tinja"></div></div>
+        <div class="toggle-body" id="tinja-body"><div class="dyn-list" id="tinja-list"></div><button class="add-btn" onclick="addRow('tinja')">+ Tambah pembeli kotoran</button></div>
       </div>
     </div>
   </div>
 
-  <!-- KESEHATAN -->
+  <!-- KESEHATAN — dengan opsi DOC -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">💊</div>
-      <h2>Kesehatan & vaksin</h2>
-    </div>
+    <div class="card-header"><div class="icon">💊</div><h2>Kesehatan &amp; vaksin <span class="doc-badge">incl. DOC</span></h2></div>
     <div class="card-body">
-      <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px">Catat setiap kegiatan kesehatan — bisa lebih dari satu per hari</p>
+      <p style="font-size:13px;color:var(--text-mid);margin-bottom:10px">Catat setiap kegiatan kesehatan — mencakup layer <strong>dan kandang DOC (KDG-05)</strong></p>
       <div class="dyn-list" id="kes-list"></div>
       <button class="add-btn" onclick="addRow('kes')">+ Tambah kegiatan kesehatan</button>
     </div>
   </div>
 
-  <!-- PENGELUARAN -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">📤</div>
-      <h2>Pengeluaran operasional</h2>
-    </div>
+    <div class="card-header"><div class="icon">📤</div><h2>Pengeluaran operasional</h2></div>
     <div class="card-body">
       <div class="toggle-card">
-        <div class="toggle-header" onclick="toggle('ops')">
-          <label>Ada pengeluaran hari ini?</label>
-          <div class="toggle-switch" id="sw-ops"></div>
-        </div>
-        <div class="toggle-body" id="ops-body">
-          <div class="dyn-list" id="ops-list"></div>
-          <button class="add-btn" onclick="addRow('ops')">+ Tambah pengeluaran</button>
-        </div>
+        <div class="toggle-header" onclick="toggle('ops')"><label>Ada pengeluaran hari ini?</label><div class="toggle-switch" id="sw-ops"></div></div>
+        <div class="toggle-body" id="ops-body"><div class="dyn-list" id="ops-list"></div><button class="add-btn" onclick="addRow('ops')">+ Tambah pengeluaran</button></div>
       </div>
     </div>
   </div>
 
-  <!-- KONDISI UMUM -->
   <div class="card">
-    <div class="card-header">
-      <div class="icon">📝</div>
-      <h2>Kondisi umum</h2>
-    </div>
+    <div class="card-header"><div class="icon">📝</div><h2>Kondisi umum</h2></div>
     <div class="card-body">
       <div class="grid2">
-        <div class="field">
-          <label class="lbl">Cuaca hari ini</label>
-          <select id="cuaca">
-            <option>Normal</option>
-            <option>Panas / terik</option>
-            <option>Hujan deras</option>
-            <option>Berkabut</option>
-          </select>
-        </div>
-        <div class="field">
-          <label class="lbl">Kondisi ayam</label>
-          <select id="kondisi">
-            <option>Baik</option>
-            <option>Ada gejala ringan</option>
-            <option>Ada gejala serius</option>
-            <option>Ada kematian massal</option>
-          </select>
-        </div>
+        <div class="field"><label class="lbl">Cuaca hari ini</label><select id="cuaca"><option>Normal</option><option>Panas / terik</option><option>Hujan deras</option><option>Berkabut</option></select></div>
+        <div class="field"><label class="lbl">Kondisi ayam</label><select id="kondisi"><option>Baik</option><option>Ada gejala ringan</option><option>Ada gejala serius</option><option>Ada kematian massal</option></select></div>
       </div>
-      <div class="field" style="margin-top:10px">
-        <label class="lbl">Catatan tambahan</label>
-        <textarea id="catatan" rows="3" placeholder="cth: Wadah pakan KDG-02 rusak, perlu diganti. Kipas mati 1 unit."></textarea>
-      </div>
+      <div class="field" style="margin-top:10px"><label class="lbl">Catatan tambahan</label><textarea id="catatan" rows="3" placeholder="cth: Wadah pakan KDG-02 rusak, perlu diganti. Kipas mati 1 unit."></textarea></div>
     </div>
   </div>
 
   <button class="btn-generate" onclick="generate()">Buat Laporan</button>
   <button class="btn-reset" onclick="resetForm()">Reset Form</button>
 
-  <!-- PREVIEW -->
   <div class="preview-card" id="preview-card">
-    <div class="preview-inner">
-      <div class="preview-label">Teks siap kirim</div>
-      <div class="preview-text" id="preview-text"></div>
-    </div>
+    <div class="preview-inner"><div class="preview-label">Teks siap kirim</div><div class="preview-text" id="preview-text"></div></div>
     <button class="btn-copy" onclick="copyText()">Salin Teks</button>
     <button class="btn-wa" onclick="kirimWA()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -691,105 +219,78 @@
 </div>
 
 <script>
-// Set today
-var today = new Date();
-var dd = String(today.getDate()).padStart(2,'0');
-var mm = String(today.getMonth()+1).padStart(2,'0');
-var yyyy = today.getFullYear();
-document.getElementById('f-tgl').value = yyyy+'-'+mm+'-'+dd;
-document.getElementById('hdr-date').textContent = dd+'/'+mm+'/'+yyyy;
+var today=new Date();
+var dd=String(today.getDate()).padStart(2,'0');
+var mm=String(today.getMonth()+1).padStart(2,'0');
+var yyyy=today.getFullYear();
+document.getElementById('f-tgl').value=yyyy+'-'+mm+'-'+dd;
+document.getElementById('hdr-date').textContent=dd+'/'+mm+'/'+yyyy;
 
-// Init baris pertama pakan & kesehatan
-window.addEventListener('load', function(){
-  if(typeof addPakanRow === 'function') addPakanRow();
-  if(typeof addRow === 'function') addRow('kes');
+window.addEventListener('load',function(){
+  if(typeof addPakanRow==='function') addPakanRow();
+  if(typeof addRow==='function') addRow('kes');
 });
 
-// Toggle switch
-var toggleState = {};
+var toggleState={};
 function toggle(key){
-  toggleState[key] = !toggleState[key];
-  var sw = document.getElementById('sw-'+key);
-  var body = document.getElementById(key+'-body');
-  if(toggleState[key]){
-    sw.classList.add('on');
-    body.classList.add('open');
-    if(document.getElementById(key+'-list').children.length === 0) addRow(key);
-  } else {
-    sw.classList.remove('on');
-    body.classList.remove('open');
-  }
+  toggleState[key]=!toggleState[key];
+  var sw=document.getElementById('sw-'+key);
+  var body=document.getElementById(key+'-body');
+  if(toggleState[key]){sw.classList.add('on');body.classList.add('open');if(document.getElementById(key+'-list').children.length===0) addRow(key);}
+  else{sw.classList.remove('on');body.classList.remove('open');}
 }
 
-// Checkboxes
-var checks = {};
-function toggleCheck(id){
-  checks[id] = !checks[id];
-  var el = document.getElementById(id);
-  if(checks[id]) el.classList.add('checked'); else el.classList.remove('checked');
-}
+var checks={};
+function toggleCheck(id){checks[id]=!checks[id];var el=document.getElementById(id);if(checks[id]) el.classList.add('checked');else el.classList.remove('checked');}
 
-// Dynamic rows
-var JENIS_PAKAN_OPTS = ['Layer Concentrate','Pakan Starter','Dedak','Jagung Giling','Konsentrat','Mix','Lainnya'];
-var JENIS_KES_OPTS = ['','Vaksinasi','Pengobatan','Suplemen / Vitamin','Desinfeksi','Pemeriksaan'];
+var JENIS_PAKAN_NAMES=['MIX','Konsentrat DOC','Layer Concentrate','Pakan Starter','Dedak','Jagung Giling','Lainnya'];
 
-var rowDefs = {
-  beli: {
-    fields: [
-      {lbl:'Jenis pakan', type:'select-pakan'},
-      {lbl:'Supplier', type:'text', ph:'UD Pakan Jaya'},
-      {lbl:'Jumlah (sak)', type:'number', ph:'0'},
-      {lbl:'Harga/sak (Rp)', type:'number', ph:'69000'}
-    ]
-  },
-  kes: {
-    fields: [
-      {lbl:'Kandang', type:'select-kdg'},
-      {lbl:'Jenis Kegiatan', type:'select-kes'},
-      {lbl:'Nama Produk', type:'text', ph:'cth: Vaksin ND-IB'},
-      {lbl:'Qty / Dosis', type:'text', ph:'cth: 200 vial'},
-      {lbl:'Keterangan', type:'text', ph:'cth: Rutin bulanan'}
-    ]
-  },
-  mort: {
-    fields: [
-      {lbl:'Kandang', type:'select-kdg-mort'},
-      {lbl:'Jenis', type:'select', opts:['','Kematian','Afkir']},
-      {lbl:'Jumlah (ekor)', type:'number', ph:'0'},
-      {lbl:'Keterangan', type:'text', ph:'sesak napas'}
-    ]
-  },
-  jual: {
-    fields: [
-      {lbl:'Nama pembeli', type:'text', ph:'Pak Budi'},
-      {lbl:'Volume (rak)', type:'number', ph:'0'},
-      {lbl:'Harga/rak (Rp)', type:'number', ph:'55000'},
-      {lbl:'Status', type:'select', opts:['Lunas','Kredit']}
-    ]
-  },
-  afkir: {
-    fields: [
-      {lbl:'RPH / pembeli', type:'text', ph:'RPH Pak Sono'},
-      {lbl:'Jumlah (ekor)', type:'number', ph:'0'},
-      {lbl:'Harga/ekor (Rp)', type:'number', ph:'28000'}
-    ]
-  },
-  ops: {
-    fields: [
-      {lbl:'Kategori', type:'select', opts:['','Tenaga Kerja','Listrik & Air','Transportasi','Depresiasi','Obat-Obatan','DOC / Bibit','Perlengkapan Kandang','Lainnya']},
-      {lbl:'Keterangan', type:'text', ph:'Gaji 2 karyawan'},
-      {lbl:'Jumlah (Rp)', type:'number', ph:'0'}
-    ]
-  },
-  tinja: {
-    fields: [
-      {lbl:'Nama pembeli', type:'text', ph:'cth: Pak Tani / Kebun'},
-      {lbl:'Volume (karung/kg)', type:'text', ph:'cth: 20 karung'},
-      {lbl:'Harga total (Rp)', type:'number', ph:'0'},
-      {lbl:'Status', type:'select', opts:['Lunas','Kredit']}
-    ]
-  }
+// ── KESEHATAN row def — kini dengan DOC (KDG-05) ────────────────────
+var rowDefs={
+  beli:{fields:[
+    {lbl:'Jenis pakan',type:'select-pakan'},
+    {lbl:'Supplier',type:'text',ph:'UD Pakan Jaya'},
+    {lbl:'Jumlah (sak)',type:'number',ph:'0'},
+    {lbl:'Harga/sak (Rp)',type:'number',ph:'69000'}
+  ]},
+  kes:{fields:[
+    {lbl:'Kandang',type:'select-kdg-kes'},
+    {lbl:'Jenis Kegiatan',type:'select-kes'},
+    {lbl:'Nama Produk / Tindakan',type:'text',ph:'cth: Vaksin ND-IB, Amoxitin'},
+    {lbl:'Qty / Dosis',type:'text',ph:'cth: 200 vial / 2 sachet'},
+    {lbl:'Keterangan',type:'text',ph:'cth: Rutin bulanan, gejala sesak'}
+  ]},
+  mort:{fields:[
+    {lbl:'Kandang',type:'select-kdg-mort'},
+    {lbl:'Jenis',type:'select',opts:['','Kematian','Afkir']},
+    {lbl:'Jumlah (ekor)',type:'number',ph:'0'},
+    {lbl:'Keterangan',type:'text',ph:'sesak napas / kaki kering'}
+  ]},
+  jual:{fields:[
+    {lbl:'Nama pembeli',type:'text',ph:'Pak Budi'},
+    {lbl:'Volume (rak)',type:'number',ph:'0'},
+    {lbl:'Harga/rak (Rp)',type:'number',ph:'55000'},
+    {lbl:'Status',type:'select',opts:['Lunas','Kredit']}
+  ]},
+  afkir:{fields:[
+    {lbl:'RPH / pembeli',type:'text',ph:'RPH Pak Sono'},
+    {lbl:'Jumlah (ekor)',type:'number',ph:'0'},
+    {lbl:'Harga/ekor (Rp)',type:'number',ph:'28000'}
+  ]},
+  ops:{fields:[
+    {lbl:'Kategori',type:'select',opts:['','Tenaga Kerja','Listrik, air & gas','Transportasi','Depresiasi','Perlengkapan','Lainnya']},
+    {lbl:'Keterangan',type:'text',ph:'Gaji 2 karyawan'},
+    {lbl:'Jumlah (Rp)',type:'number',ph:'0'}
+  ]},
+  tinja:{fields:[
+    {lbl:'Nama pembeli',type:'text',ph:'cth: Pak Tani / Kebun'},
+    {lbl:'Volume (karung/kg)',type:'text',ph:'cth: 20 karung'},
+    {lbl:'Harga total (Rp)',type:'number',ph:'0'},
+    {lbl:'Status',type:'select',opts:['Lunas','Kredit']}
+  ]}
 };
+
+var JENIS_KES_OPTS=['','Vaksinasi','Pengobatan','Suplemen / Vitamin','Desinfeksi','Pemeriksaan Dokter Hewan','Nekropsi / Bedah Bangkai'];
 
 function getKdgNames(){
   return [
@@ -799,47 +300,41 @@ function getKdgNames(){
     document.getElementById('k4-nama').value.trim()||'KDG-04'
   ];
 }
+
 function syncPakanLabels(){
-  // update dropdown kandang di semua baris pakan yang ada
   document.querySelectorAll('#pakan-kdg-list .pakan-kdg-sel').forEach(function(sel){
-    var cur = sel.value;
-    var names = getKdgNames();
-    sel.innerHTML = names.map(function(n){ return '<option value="'+n+'" '+(n===cur?'selected':'')+'>'+n+'</option>'; }).join('');
+    var cur=sel.value;
+    var names=getKdgNames();
+    sel.innerHTML=names.map(function(n){return '<option value="'+n+'" '+(n===cur?'selected':'')+'>'+n+'</option>';}).join('')
+      +'<option value="DOC (KDG-05)" '+(cur==='DOC (KDG-05)'?'selected':'')+'>DOC (KDG-05)</option>';
   });
 }
 ['k1-nama','k2-nama','k3-nama','k4-nama'].forEach(function(id){
-  var el = document.getElementById(id);
-  if(el) el.addEventListener('input', syncPakanLabels);
+  var el=document.getElementById(id);
+  if(el) el.addEventListener('input',syncPakanLabels);
 });
 
-// Live hint: saat rak diisi, tampilkan estimasi butir di bawah input
 ['k1','k2','k3','k4'].forEach(function(kid){
-  var rakEl = document.getElementById(kid+'-rak');
-  var hintEl = document.getElementById(kid+'-hint');
-  if(!rakEl || !hintEl) return;
-  rakEl.addEventListener('input', function(){
-    var rak = parseFloat(rakEl.value);
-    if(isNaN(rak) || rak <= 0){
-      hintEl.textContent = '— butir';
-    } else {
-      var butir = Math.round(rak * 30);
-      hintEl.textContent = '≈ ' + butir.toLocaleString('id') + ' butir';
-    }
+  var rakEl=document.getElementById(kid+'-rak');
+  var hintEl=document.getElementById(kid+'-hint');
+  if(!rakEl||!hintEl) return;
+  rakEl.addEventListener('input',function(){
+    var rak=parseFloat(rakEl.value);
+    if(isNaN(rak)||rak<=0){hintEl.textContent='— butir';}
+    else{hintEl.textContent='≈ '+Math.round(rak*30).toLocaleString('id')+' butir';}
   });
 });
 
-var JENIS_PAKAN_NAMES = ['Layer Concentrate','Pakan Starter','Dedak','Jagung Giling','Konsentrat','Mix','Lainnya'];
-
 function addPakanRow(){
-  var names = getKdgNames();
-  var div = document.createElement('div');
-  div.className = 'dyn-row pakan-row';
-  div.style.gridTemplateColumns = '1fr 1fr 1fr 32px';
-  var kdgOpts = names.map(function(n){ return '<option>'+n+'</option>'; }).join('');
-  var pakanOpts = JENIS_PAKAN_NAMES.map(function(p){ return '<option>'+p+'</option>'; }).join('');
-  div.innerHTML =
-    '<div class="field"><label class="lbl">Kandang</label>'
-    +'<select class="pakan-kdg-sel">'+kdgOpts+'<option value="DOC">DOC (Semua)</option></select></div>'
+  var names=getKdgNames();
+  var div=document.createElement('div');
+  div.className='dyn-row pakan-row';
+  div.style.gridTemplateColumns='1fr 1fr 1fr 32px';
+  var kdgOpts=names.map(function(n){return '<option>'+n+'</option>';}).join('')
+    +'<option value="DOC (KDG-05)">DOC (KDG-05)</option>';
+  var pakanOpts=JENIS_PAKAN_NAMES.map(function(p){return '<option>'+p+'</option>';}).join('');
+  div.innerHTML='<div class="field"><label class="lbl">Kandang</label>'
+    +'<select class="pakan-kdg-sel">'+kdgOpts+'</select></div>'
     +'<div class="field"><label class="lbl">Jenis pakan</label>'
     +'<select class="pakan-jenis-sel">'+pakanOpts+'</select></div>'
     +'<div class="field"><label class="lbl">Jumlah (kg)</label>'
@@ -849,62 +344,64 @@ function addPakanRow(){
 }
 
 function addRow(type){
-  var def = rowDefs[type];
-  var div = document.createElement('div');
-  div.className = 'dyn-row '+type+'-row';
-  var html = '';
+  var def=rowDefs[type];
+  var div=document.createElement('div');
+  div.className='dyn-row '+type+'-row';
+  var html='';
   def.fields.forEach(function(f){
-    html += '<div class="field"><label class="lbl">'+f.lbl+'</label>';
-    if(f.type==='select-kdg'){
+    html+='<div class="field"><label class="lbl">'+f.lbl+'</label>';
+    if(f.type==='select-kdg-kes'){
+      // ── KESEHATAN: Layer KDG-01~04 + DOC (KDG-05) ──────────────────
       var names=getKdgNames();
-      html += '<select><option value="">Semua</option>';
-      names.forEach(function(nm){ html += '<option>'+nm+'</option>'; });
-      html += '</select>';
+      html+='<select>';
+      html+='<option value="">Semua Kandang</option>';
+      names.forEach(function(nm){html+='<option>'+nm+'</option>';});
+      html+='<option value="DOC (KDG-05)" style="background:#f5f3ff;color:#5b21b6;font-weight:600">▶ DOC (KDG-05)</option>';
+      html+='</select>';
     } else if(f.type==='select-kdg-mort'){
       var names=getKdgNames();
-      html += '<select><option value="">-- Pilih --</option>';
-      names.forEach(function(nm){ html += '<option>'+nm+'</option>'; });
-      html += '<option value="DOC">DOC (Semua)</option>';
-      html += '</select>';
+      html+='<select><option value="">-- Pilih --</option>';
+      names.forEach(function(nm){html+='<option>'+nm+'</option>';});
+      html+='<option value="DOC (KDG-05)">DOC (KDG-05)</option>';
+      html+='</select>';
     } else if(f.type==='select-pakan'){
-      html += '<select>';
-      JENIS_PAKAN_OPTS.forEach(function(o){ html += '<option>'+o+'</option>'; });
-      html += '</select>';
+      html+='<select>';
+      JENIS_PAKAN_NAMES.forEach(function(o){html+='<option>'+o+'</option>';});
+      html+='</select>';
     } else if(f.type==='select-kes'){
-      html += '<select>';
-      JENIS_KES_OPTS.forEach(function(o){ html += '<option>'+o+'</option>'; });
-      html += '</select>';
+      html+='<select>';
+      JENIS_KES_OPTS.forEach(function(o){html+='<option>'+o+'</option>';});
+      html+='</select>';
     } else if(f.type==='select'){
-      html += '<select>';
-      f.opts.forEach(function(o){ html += '<option>'+o+'</option>'; });
-      html += '</select>';
+      html+='<select>';
+      f.opts.forEach(function(o){html+='<option>'+o+'</option>';});
+      html+='</select>';
     } else {
-      html += '<input type="'+f.type+'" placeholder="'+(f.ph||'')+'" inputmode="'+(f.type==='number'?'numeric':'text')+'">';
+      html+='<input type="'+f.type+'" placeholder="'+(f.ph||'')+'" inputmode="'+(f.type==='number'?'numeric':'text')+'">';
     }
-    html += '</div>';
+    html+='</div>';
   });
-  html += '<button class="del-btn" onclick="this.parentNode.remove()">Hapus baris ini</button>';
-  div.innerHTML = html;
+  html+='<button class="del-btn" onclick="this.parentNode.remove()">Hapus baris ini</button>';
+  div.innerHTML=html;
   document.getElementById(type+'-list').appendChild(div);
 }
 
-// Helpers
-function v(id){ var el=document.getElementById(id); return el?el.value.trim():''; }
-function n(id){ var x=parseFloat(document.getElementById(id).value); return isNaN(x)?0:x; }
-function fmtNum(x){ return Number(x).toLocaleString('id'); }
-function fmtDate(d){ if(!d) return '-'; var p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
-function getRows(listId, fieldCount){
-  var rows=[]; var list=document.getElementById(listId); if(!list) return rows;
+function v(id){var el=document.getElementById(id);return el?el.value.trim():'';}
+function n(id){var x=parseFloat(document.getElementById(id).value);return isNaN(x)?0:x;}
+function fmtNum(x){return Number(x).toLocaleString('id');}
+function fmtDate(d){if(!d) return '-';var p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+function getRows(listId){
+  var rows=[];var list=document.getElementById(listId);if(!list) return rows;
   Array.from(list.querySelectorAll('.dyn-row')).forEach(function(row){
     var inputs=row.querySelectorAll('input,select');
-    var vals=[]; inputs.forEach(function(el){ vals.push(el.value.trim()); });
+    var vals=[];inputs.forEach(function(el){vals.push(el.value.trim());});
     rows.push(vals);
   });
   return rows;
 }
 
 function generate(){
-  var tgl=fmtDate(v('f-tgl')), nama=v('f-nama')||'Pelapor';
+  var tgl=fmtDate(v('f-tgl')),nama=v('f-nama')||'Pelapor';
   var L=[];
   L.push('*LAPORAN HARIAN PETERNAKAN*');
   L.push('Tanggal : '+tgl);
@@ -913,18 +410,16 @@ function generate(){
 
   var names=getKdgNames();
   var kdgs=[{id:'k1',lbl:names[0]},{id:'k2',lbl:names[1]},{id:'k3',lbl:names[2]},{id:'k4',lbl:names[3]}];
-  var prodLines=[], totRak=0, totBS=0, totButir=0;
+  var prodLines=[],totRak=0,totBS=0,totButir=0;
   kdgs.forEach(function(k){
-    var rak=n(k.id+'-rak'), panen=n(k.id+'-panen'), bs=n(k.id+'-bs');
-    if(rak<=0 && panen<=0) return;
-    // Rak utama; jika tidak diisi, hitung dari butir
-    var rakFinal = rak > 0 ? rak : Math.round((panen-bs)/30*10)/10;
-    var butirFinal = panen > 0 ? panen : Math.round(rakFinal*30);
-    var bsFinal = bs;
-    totRak += rakFinal; totBS += bsFinal; totButir += butirFinal;
-    var line = '  '+k.lbl+' : *'+rakFinal.toFixed(1)+' rak*';
-    if(bsFinal>0) line += ' (BS: '+bsFinal+' butir)';
-    if(panen>0) line += ' ['+fmtNum(butirFinal)+' butir]';
+    var rak=n(k.id+'-rak'),panen=n(k.id+'-panen'),bs=n(k.id+'-bs');
+    if(rak<=0&&panen<=0) return;
+    var rakFinal=rak>0?rak:Math.round((panen-bs)/30*10)/10;
+    var butirFinal=panen>0?panen:Math.round(rakFinal*30);
+    totRak+=rakFinal;totBS+=bs;totButir+=butirFinal;
+    var line='  '+k.lbl+' : *'+rakFinal.toFixed(1)+' rak*';
+    if(bs>0) line+=' (BS: '+bs+' butir)';
+    if(panen>0) line+=' ['+fmtNum(butirFinal)+' butir]';
     prodLines.push(line);
   });
   L.push('*PRODUKSI TELUR*');
@@ -933,23 +428,23 @@ function generate(){
     L.push('  ────────────────────');
     L.push('  Total : *'+totRak.toFixed(1)+' rak*'+(totButir>0?' ('+fmtNum(totButir)+' butir)':''));
     if(totBS>0) L.push('  BS/Retak total : '+totBS+' butir');
-  } else { L.push('  (tidak ada data)'); }
+  } else{L.push('  (tidak ada data)');}
   L.push('');
 
   var pkLines=[];
   document.querySelectorAll('#pakan-kdg-list .pakan-row').forEach(function(row){
-    var kdg = row.querySelector('.pakan-kdg-sel').value;
-    var jenis = row.querySelector('.pakan-jenis-sel').value;
-    var kg = parseFloat(row.querySelector('.pakan-kg-inp').value)||0;
+    var kdg=row.querySelector('.pakan-kdg-sel').value;
+    var jenis=row.querySelector('.pakan-jenis-sel').value;
+    var kg=parseFloat(row.querySelector('.pakan-kg-inp').value)||0;
     if(kg>0) pkLines.push('  '+kdg+' | '+jenis+' : '+kg+' kg');
   });
-  if(pkLines.length){ L.push('*PEMAKAIAN PAKAN*'); pkLines.forEach(function(l){L.push(l);}); }
+  if(pkLines.length){L.push('*PEMAKAIAN PAKAN*');pkLines.forEach(function(l){L.push(l);});}
   if(toggleState['beli']){
     var beliRows=getRows('beli-list');
     var vBeli=beliRows.filter(function(r){return r[2]>0||r[0];});
     if(vBeli.length){
       L.push('  Pembelian pakan:');
-      vBeli.forEach(function(r){ L.push('    '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?r[2]+' sak':'-')+' | '+(r[3]?'Rp'+fmtNum(r[3])+'/sak':'-')); });
+      vBeli.forEach(function(r){L.push('    '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?r[2]+' sak':'-')+' | '+(r[3]?'Rp'+fmtNum(r[3])+'/sak':'-'));});
     }
   }
   if(pkLines.length||toggleState['beli']) L.push('');
@@ -958,44 +453,23 @@ function generate(){
   var vMort=mortRows.filter(function(r){return r[0]&&r[1]&&r[2]>0;});
   if(vMort.length){
     L.push('*KEMATIAN / AFKIR*');
-    vMort.forEach(function(r){ L.push('  '+r[0]+' – '+r[1]+' : '+r[2]+' ekor'+(r[3]?' ('+r[3]+')':'')); });
+    vMort.forEach(function(r){L.push('  '+r[0]+' – '+r[1]+' : '+r[2]+' ekor'+(r[3]?' ('+r[3]+')':''));});
     L.push('');
   }
 
-  var adaJual=toggleState['jual'], adaAfkir=toggleState['afkir'];
-  if(adaJual||adaAfkir||toggleState['tinja']){
+  if(toggleState['jual']||toggleState['afkir']||toggleState['tinja']){
     L.push('*PENJUALAN*');
-    if(adaJual){
-      var jualRows=getRows('jual-list');
-      var vJual=jualRows.filter(function(r){return r[0]||r[1]>0;});
-      if(vJual.length){
-        L.push('  Telur:');
-        vJual.forEach(function(r){
-          var tot=r[1]&&r[2]?' = Rp'+fmtNum(r[1]*r[2]):'';
-          L.push('    '+(r[0]||'-')+' | '+(r[1]?r[1]+' rak':'-')+' | '+(r[2]?'Rp'+fmtNum(r[2])+'/rak':'-')+tot+' | '+r[3]);
-        });
-      }
+    if(toggleState['jual']){
+      var vJ=getRows('jual-list').filter(function(r){return r[0]||r[1]>0;});
+      if(vJ.length){L.push('  Telur:');vJ.forEach(function(r){var tot=r[1]&&r[2]?' = Rp'+fmtNum(r[1]*r[2]):'';L.push('    '+(r[0]||'-')+' | '+(r[1]?r[1]+' rak':'-')+' | '+(r[2]?'Rp'+fmtNum(r[2])+'/rak':'-')+tot+' | '+r[3]);});}
     }
-    if(adaAfkir){
-      var afkirRows=getRows('afkir-list');
-      var vAfkir=afkirRows.filter(function(r){return r[0]||r[1]>0;});
-      if(vAfkir.length){
-        L.push('  Ayam afkir:');
-        vAfkir.forEach(function(r){
-          var tot=r[1]&&r[2]?' = Rp'+fmtNum(r[1]*r[2]):'';
-          L.push('    '+(r[0]||'-')+' | '+(r[1]?r[1]+' ekor':'-')+' | '+(r[2]?'Rp'+fmtNum(r[2])+'/ekor':'-')+tot);
-        });
-      }
+    if(toggleState['afkir']){
+      var vA=getRows('afkir-list').filter(function(r){return r[0]||r[1]>0;});
+      if(vA.length){L.push('  Ayam afkir:');vA.forEach(function(r){var tot=r[1]&&r[2]?' = Rp'+fmtNum(r[1]*r[2]):'';L.push('    '+(r[0]||'-')+' | '+(r[1]?r[1]+' ekor':'-')+' | '+(r[2]?'Rp'+fmtNum(r[2])+'/ekor':'-')+tot);});}
     }
     if(toggleState['tinja']){
-      var tinjaRows=getRows('tinja-list');
-      var vTinja=tinjaRows.filter(function(r){return r[0]||r[2]>0;});
-      if(vTinja.length){
-        L.push('  Kotoran/Tinja:');
-        vTinja.forEach(function(r){
-          L.push('    '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?'Rp'+fmtNum(r[2]):'-')+' | '+r[3]);
-        });
-      }
+      var vT=getRows('tinja-list').filter(function(r){return r[0]||r[2]>0;});
+      if(vT.length){L.push('  Kotoran/Tinja:');vT.forEach(function(r){L.push('    '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?'Rp'+fmtNum(r[2]):'-')+' | '+r[3]);});}
     }
     L.push('');
   }
@@ -1005,20 +479,20 @@ function generate(){
   if(vKes.length){
     L.push('*KESEHATAN*');
     vKes.forEach(function(r){
-      var kdg=r[0]||'Semua', jenis=r[1]||'-', produk=r[2]||'-', qty=r[3]||'-', ket=r[4]||'';
-      L.push('  '+kdg+' | '+jenis+' | '+produk+' | '+qty+(ket?' | '+ket:''));
+      var kdg=r[0]||'Semua',jenis=r[1]||'-',produk=r[2]||'-',qty=r[3]||'-',ket=r[4]||'';
+      var kdgLabel=kdg==='DOC (KDG-05)'?'[DOC] KDG-05':kdg;
+      L.push('  '+kdgLabel+' | '+jenis+' | '+produk+' | '+qty+(ket?' | '+ket:''));
     });
     L.push('');
   }
 
   if(toggleState['ops']){
-    var opsRows=getRows('ops-list');
-    var vOps=opsRows.filter(function(r){return r[0]||r[2]>0;});
-    if(vOps.length){
+    var vO=getRows('ops-list').filter(function(r){return r[0]||r[2]>0;});
+    if(vO.length){
       L.push('*PENGELUARAN OPERASIONAL*');
-      vOps.forEach(function(r){ L.push('  '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?'Rp'+fmtNum(r[2]):'-')); });
-      var totOps=vOps.reduce(function(s,r){return s+(parseFloat(r[2])||0);},0);
-      if(totOps>0) L.push('  Total : Rp'+fmtNum(totOps));
+      vO.forEach(function(r){L.push('  '+(r[0]||'-')+' | '+(r[1]||'-')+' | '+(r[2]?'Rp'+fmtNum(r[2]):'-'));});
+      var tot=vO.reduce(function(s,r){return s+(parseFloat(r[2])||0);},0);
+      if(tot>0) L.push('  Total : Rp'+fmtNum(tot));
       L.push('');
     }
   }
@@ -1026,29 +500,20 @@ function generate(){
   L.push('*KONDISI UMUM*');
   L.push('  Cuaca  : '+v('cuaca'));
   L.push('  Ayam   : '+v('kondisi'));
-  var cat=v('catatan'); if(cat) L.push('  Catatan: '+cat);
+  var cat=v('catatan');if(cat) L.push('  Catatan: '+cat);
 
-  var txt=L.join('\n');
-  document.getElementById('preview-text').textContent=txt;
-  var pc=document.getElementById('preview-card');
-  pc.classList.add('show');
-  setTimeout(function(){ pc.scrollIntoView({behavior:'smooth',block:'start'}); },100);
+  document.getElementById('preview-text').textContent=L.join('\n');
+  var pc=document.getElementById('preview-card');pc.classList.add('show');
+  setTimeout(function(){pc.scrollIntoView({behavior:'smooth',block:'start'});},100);
 }
 
 function copyText(){
   var txt=document.getElementById('preview-text').textContent;
-  if(navigator.clipboard){ navigator.clipboard.writeText(txt); }
-  else { var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); }
-  var toast=document.getElementById('copy-toast');
-  toast.classList.add('show');
-  setTimeout(function(){ toast.classList.remove('show'); },2500);
+  if(navigator.clipboard){navigator.clipboard.writeText(txt);}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+  var toast=document.getElementById('copy-toast');toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},2500);
 }
-
-function kirimWA(){
-  var txt=document.getElementById('preview-text').textContent;
-  var encoded=encodeURIComponent(txt);
-  window.open('https://wa.me/?text='+encoded,'_blank');
-}
+function kirimWA(){window.open('https://wa.me/?text='+encodeURIComponent(document.getElementById('preview-text').textContent),'_blank');}
 
 function resetForm(){
   document.querySelectorAll('input[type=number],input[type=text],textarea').forEach(function(el){el.value='';});
@@ -1058,17 +523,9 @@ function resetForm(){
   document.getElementById('kes-list').innerHTML='';
   Object.keys(toggleState).forEach(function(k){
     toggleState[k]=false;
-    var sw=document.getElementById('sw-'+k);
-    if(sw) sw.classList.remove('on');
-    var body=document.getElementById(k+'-body');
-    if(body) body.classList.remove('open');
-    var list=document.getElementById(k+'-list');
-    if(list) list.innerHTML='';
-  });
-  Object.keys(checks).forEach(function(id){
-    checks[id]=false;
-    var el=document.getElementById(id);
-    if(el) el.classList.remove('checked');
+    var sw=document.getElementById('sw-'+k);if(sw) sw.classList.remove('on');
+    var body=document.getElementById(k+'-body');if(body) body.classList.remove('open');
+    var list=document.getElementById(k+'-list');if(list) list.innerHTML='';
   });
   document.getElementById('mort-list').innerHTML='';
   document.getElementById('preview-card').classList.remove('show');
